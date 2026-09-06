@@ -18,13 +18,30 @@ URL identity for a group (`/groups/[slug]`), derived from Name, unique.
 Stays ASCII even when Autonym is non-Latin.
 
 ## HomelandCentroid
-A single `lat/lng + zoom` used ONLY as a display centroid for the map.
-Not a territory claim. True boundaries are out of scope for v1.
+A group-level `lat/lng + zoom` used as the map marker anchor and as the
+fallback view when a group has no DistrictEntries. Not a territory claim.
+
+## DistrictEntry
+One `{name, lat, lng}` presence of a group in a lowest-admin division
+(municipality, district). Each entry gets a map marker. An entry without
+a polygon feature renders marker-only.
+
+## Districts
+The group's `DistrictEntry[]` — the single source of truth for
+sub-national presence (no separate singular column). The card lists all
+entries one-per-line.
+
+## DistrictBoundary
+The stored per-group polygon set (one feature per DistrictEntry) shaded
+on the map and framed via fit-all. An extent display, never an
+exclusivity claim — overlapping district claims between groups are
+allowed.
 
 ## Distribution
 `countries[]` (ISO 3166-1 English names) + `region` (continent enum:
 Africa, Asia, Europe, North America, South America, Oceania, Middle East).
-Homeland only in v1 — diaspora excluded.
+Homeland only in v1 — diaspora excluded. Sync rule: every Districts
+entry's country appears in `countries[]` (seed-time convention, no FK).
 
 ## Language
 Spoken language(s), `languages[]`. A group may list many.

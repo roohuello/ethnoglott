@@ -1,7 +1,8 @@
 # ADR-0002: Point centroid map instead of polygons
 
 Date: 2026-09-06
-Status: accepted
+Status: superseded by ADR-0003; render stack since moved MapLibre →
+Leaflet, see ADR-0004.
 
 ## Context
 Detail page needs a MapLibre view of "where the group lives". Options:
