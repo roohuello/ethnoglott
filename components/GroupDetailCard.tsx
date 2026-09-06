@@ -54,6 +54,15 @@ export function GroupDetailCard({ group }: { group: EthnicGroup }) {
           )}
         </Row>
         {group.region && <Row label="Region">{group.region}</Row>}
+        {group.districts.length > 0 && (
+          <Row label="District">
+            <ul className="flex flex-col gap-1">
+              {group.districts.map((d) => (
+                <li key={d.name}>{d.name}</li>
+              ))}
+            </ul>
+          </Row>
+        )}
         {group.languages.length > 0 && (
           <Row label="Languages">
             <ul className="flex flex-col gap-1">

@@ -23,12 +23,14 @@ export default async function GroupPage({
       </Link>
       <div className="mt-4 grid flex-1 gap-6 lg:grid-cols-[40%_60%]">
         <GroupDetailCard group={group} />
-        <div className="min-h-[320px] lg:sticky lg:top-6 lg:h-[calc(100vh-6rem)]">
+        <div className="h-[420px] lg:sticky lg:top-6 lg:h-[calc(100vh-6rem)]">
           <GroupMap
             lat={group.lat}
             lng={group.lng}
             zoom={group.zoom}
             label={group.name}
+            districts={group.districts}
+            geojson={group.geojson}
           />
         </div>
       </div>

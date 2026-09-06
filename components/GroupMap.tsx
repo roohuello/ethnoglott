@@ -1,51 +1,33 @@
 "use client";
 
-import * as maplibregl from "maplibre-gl";
-import { useEffect, useRef } from "react";
-import "maplibre-gl/dist/maplibre-gl.css";
+import dynamic from "next/dynamic";
+import type { DistrictPoint } from "./GroupMapView";
 
-const STYLE_URL =
-  "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
+const GroupMapView = dynamic(
+  () => import("./GroupMapView").then((m) => m.GroupMapView),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex h-full min-h-[320px] w-full items-center justify-center rounded-lg border text-sm text-muted-foreground">
+        Loading map…
+      </div>
+    ),
+  },
+);
 
 interface GroupMapProps {
   lat: number | null;
   lng: number | null;
   zoom: number | null;
   label: string;
+  districts?: DistrictPoint[];
+  geojson?: string | null;
 }
 
-export function GroupMap({ lat, lng, zoom, label }: GroupMapProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const approximate = lat == null || lng == null;
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-    const center: [number, number] =
-      lat != null && lng != null ? [lng, lat] : [20, 20];
-    const map = new maplibregl.Map({
-      container: containerRef.current,
-      style: STYLE_URL,
-      center,
-      zoom: zoom ?? (approximate ? 1 : 4),
-    });
-    map.addControl(new maplibregl.NavigationControl(), "top-right");
-    if (!approximate) {
-      new maplibregl.Marker()
-        .setLngLat(center)
-        .setPopup(new maplibregl.Popup({ offset: 24 }).setText(label))
-        .addTo(map);
-    }
-    return () => map.remove();
-  }, [lat, lng, zoom, label, approximate]);
-
-  return (
-    <div className="relative h-full min-h-[320px] w-full overflow-hidden rounded-lg border">
-      <div ref={containerRef} className="absolute inset-0" />
-      {approximate && (
-        <span className="absolute top-3 left-3 rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">
-          Approximate location
-        </span>
-      )}
-    </div>
-  );
+// Client-only boundary: Leaflet touches `window`, and Next 16 forbids
+// `ssr: false` in Server Components — so the dynamic import lives here.
+export function GroupMap(props: GroupMapProps) {
+  return <GroupMapView {...props} />;
 }
+
+export type { DistrictPoint };
