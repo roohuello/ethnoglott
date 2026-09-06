@@ -10,6 +10,7 @@ const COUNTRY_CODES: Record<string, CountryIsoCode> = {
   China: "CN",
   Singapore: "SG",
   Taiwan: "TW",
+  Zambia: "ZM",
 };
 
 export function countryCode(name: string): CountryIsoCode | null {

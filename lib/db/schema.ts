@@ -1,18 +1,5 @@
 import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
-// Starter table — kept for reference.
-export const notes = sqliteTable("notes", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  title: text("title").notNull(),
-  content: text("content").notNull().default(""),
-  createdAt: integer("created_at", { mode: "timestamp_ms" })
-    .notNull()
-    .$defaultFn(() => new Date()),
-});
-
-export type Note = typeof notes.$inferSelect;
-export type NewNote = typeof notes.$inferInsert;
-
 // Canonical term: EthnicGroup (see CONTEXT.md). Single table, JSON text
 // columns per ADR-0001. Point centroid per ADR-0002; `geojson` reserved.
 export const ethnicGroups = sqliteTable("ethnic_groups", {
@@ -26,6 +13,10 @@ export const ethnicGroups = sqliteTable("ethnic_groups", {
     .$type<string[]>()
     .$defaultFn(() => []),
   region: text("region").notNull().default(""),
+  districts: text("districts", { mode: "json" })
+    .notNull()
+    .$type<{ name: string; lat: number | null; lng: number | null }[]>()
+    .$defaultFn(() => []),
   languages: text("languages", { mode: "json" })
     .notNull()
     .$type<string[]>()
