@@ -23,7 +23,7 @@ export async function listGroups(
     const haystack = [
       g.name,
       g.autonym ?? "",
-      g.region,
+      g.continent,
       g.languageFamily ?? "",
       ...g.countries,
       ...g.languages,

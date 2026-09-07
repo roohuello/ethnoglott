@@ -5,42 +5,53 @@ A people sharing identity, language(s), and homeland. Canonical term.
 Never `tribe` (pejorative) or `nationality` (citizenship ≠ ethnicity).
 
 ## Name
-English exonym (e.g. `Han Chinese`). Source of the Slug; secondary
-display under the heading.
+English exonym in singular form (e.g. `Bulgarian`, not `Bulgarians`).
+Source of the Slug; secondary display under the heading.
 
 ## Autonym
 The group's self-name in its own language (e.g. `Hànzú`). Nullable.
-PRIMARY display heading; falls back to Name when NULL. Searched
-alongside Name. When equal to Name, the subline is hidden as redundant.
+Romanized Latin-script form, proper case (e.g. `Bŭlgari`, not `българи`
+or `bŭlgari`). PRIMARY display heading; falls back to Name when NULL.
+Searched alongside Name. When equal to Name, the subline is hidden as
+redundant.
 
 ## Slug
 URL identity for a group (`/groups/[slug]`), derived from Name, unique.
-Stays ASCII even when Autonym is non-Latin.
+Stays ASCII even when Autonym carries diacritics.
 
 ## HomelandCentroid
 A group-level `lat/lng + zoom` used as the map marker anchor and as the
-fallback view when a group has no DistrictEntries. Not a territory claim.
+fallback view when a group has no RegionEntries. Not a territory claim.
 
-## DistrictEntry
+## RegionEntry
 One `{name, lat, lng}` presence of a group in a lowest-admin division
 (municipality, district). Each entry gets a map marker. An entry without
 a polygon feature renders marker-only.
 
-## Districts
-The group's `DistrictEntry[]` — the single source of truth for
+## Regions
+The group's `RegionEntry[]` — the single source of truth for
 sub-national presence (no separate singular column). The card lists all
 entries one-per-line.
 
-## DistrictBoundary
-The stored per-group polygon set (one feature per DistrictEntry) shaded
+## RegionBoundary
+The stored per-group polygon set (one feature per RegionEntry) shaded
 on the map and framed via fit-all. An extent display, never an
-exclusivity claim — overlapping district claims between groups are
+exclusivity claim — overlapping region claims between groups are
 allowed.
 
+## CityEntry
+One `{name, lat, lng}` major town or city for a group. Each entry gets
+a map dot marker (distinct from RegionEntry pins) and a card list row.
+
+## Cities
+The group's `CityEntry[]` — the single source of truth for major
+settlements (no separate singular column). The card lists all entries
+one-per-line; empty hides the row.
+
 ## Distribution
-`countries[]` (ISO 3166-1 English names) + `region` (continent enum:
+`countries[]` (ISO 3166-1 English names) + `continent` (enum:
 Africa, Asia, Europe, North America, South America, Oceania, Middle East).
-Homeland only in v1 — diaspora excluded. Sync rule: every Districts
+Homeland only in v1 — diaspora excluded. Sync rule: every Regions
 entry's country appears in `countries[]` (seed-time convention, no FK).
 
 ## Language
@@ -49,10 +60,6 @@ Spoken language(s), `languages[]`. A group may list many.
 ## LanguageFamily
 Single filter key per group (e.g. `Sino-Tibetan`). Simplification for
 filtering; multilingual edge cases collapse to one family in v1.
-
-## Population
-Estimated headcount (int, nullable, implicitly undated). No source/year
-tracking in v1. NULL hides the row.
 
 ## Summary
 Hand-written 1–3 sentence overview.

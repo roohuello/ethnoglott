@@ -27,7 +27,7 @@ dynamic call lives in a client loader).
 - Leaflet has no WebGL context and no web worker — the entire observed
   failure class (worker 404, GL init) structurally cannot occur.
 - Stored data is renderer-neutral: the ADR-0003 FeatureCollection feeds
-  `<GeoJSON>` directly, `districts[]` feeds `<Marker>`s, `lat/lng`
+  `<GeoJSON>` directly, `regions[]` feeds `<Marker>`s, `lat/lng`
   fallback and bounds-fit map 1:1.
 - Verified first on an isolated `/map-test` probe before touching the
   detail page.

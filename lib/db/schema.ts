@@ -7,13 +7,16 @@ export const ethnicGroups = sqliteTable("ethnic_groups", {
   slug: text("slug").notNull().unique(),
   name: text("name").notNull(),
   autonym: text("autonym"),
-  population: integer("population"),
   countries: text("countries", { mode: "json" })
     .notNull()
     .$type<string[]>()
     .$defaultFn(() => []),
-  region: text("region").notNull().default(""),
-  districts: text("districts", { mode: "json" })
+  continent: text("continent").notNull().default(""),
+  regions: text("regions", { mode: "json" })
+    .notNull()
+    .$type<{ name: string; lat: number | null; lng: number | null }[]>()
+    .$defaultFn(() => []),
+  cities: text("cities", { mode: "json" })
     .notNull()
     .$type<{ name: string; lat: number | null; lng: number | null }[]>()
     .$defaultFn(() => []),
@@ -22,6 +25,7 @@ export const ethnicGroups = sqliteTable("ethnic_groups", {
     .$type<string[]>()
     .$defaultFn(() => []),
   languageFamily: text("language_family"),
+  languageSubfamily: text("language_subfamily"),
   summary: text("summary").notNull().default(""),
   lat: real("lat"),
   lng: real("lng"),
