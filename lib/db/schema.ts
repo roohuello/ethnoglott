@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 // Canonical term: EthnicGroup (see CONTEXT.md). Single table, JSON text
@@ -32,6 +33,11 @@ export const ethnicGroups = sqliteTable("ethnic_groups", {
   zoom: integer("zoom"),
   geojson: text("geojson"),
   imageUrl: text("image_url"),
+  updatedAt: integer("updated_at")
+    .notNull()
+    .default(sql`(unixepoch())`)
+    .$defaultFn(() => Math.floor(Date.now() / 1000))
+    .$onUpdateFn(() => Math.floor(Date.now() / 1000)),
 });
 
 export type EthnicGroup = typeof ethnicGroups.$inferSelect;

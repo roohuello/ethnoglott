@@ -1,4 +1,4 @@
-import { asc, eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
 import type { EthnicGroup } from "@/lib/db/schema";
 
@@ -14,7 +14,7 @@ export async function listGroups(
   const rows = await db
     .select()
     .from(schema.ethnicGroups)
-    .orderBy(asc(schema.ethnicGroups.name))
+    .orderBy(desc(schema.ethnicGroups.updatedAt), asc(schema.ethnicGroups.name))
     .limit(MAX_ROWS);
 
   const q = filters.q?.trim().toLowerCase();

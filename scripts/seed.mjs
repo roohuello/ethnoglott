@@ -8,13 +8,41 @@ const db = new Database(DB_PATH);
 db.pragma("journal_mode = WAL");
 
 const columns = `(slug, name, autonym, countries, continent,
-  regions, cities, languages, language_family, language_subfamily, summary, lat, lng, zoom, geojson)`;
+  regions, cities, languages, language_family, language_subfamily, summary, lat, lng, zoom, geojson, updated_at)`;
+
+// Bulgaria → Burgas Province: marker pins the Black Sea town of Primorsko
+// (OSM relation 1937061); geojson frames Primorsko municipality.
+// (Kept in the seeder permanently so a from-scratch reseed reproduces it.
+// The Ukrainian row is still DB-only — re-add it here once its values are
+// recovered.)
+const primorskoBoundary = readFileSync(
+  new URL("./geo/primorsko-municipality.geojson", import.meta.url),
+  "utf8",
+);
+const bulgarians = [
+  "bulgarian",
+  "Bulgarian",
+  "Bŭlgari",
+  JSON.stringify(["Bulgaria"]),
+  "Europe",
+  JSON.stringify([
+    { name: "Primorsko municipality", lat: 42.2698672, lng: 27.7506179 },
+  ]),
+  JSON.stringify([{ name: "Primorsko", lat: 42.2698672, lng: 27.7506179 }]),
+  JSON.stringify(["Bulgarian"]),
+  "Indo-European",
+  "Balto-Slavic",
+  "The Bulgarians are a South Slavic ethnic group native to Bulgaria, forming the majority in Burgas Province including the Black Sea town of Primorsko. They speak Bulgarian, an Eastern South Slavic language written in Cyrillic. This entry maps their presence at Primorsko.",
+  42.2698672,
+  27.7506179,
+  null,
+  primorskoBoundary,
+  Math.floor(Date.now() / 1000),
+];
 
 // Romania → Iași County: marker pins Trifești village (OSM way 75400532),
 // the mapped presence inside the county; geojson frames the whole of Iași
 // County (OSM relation 2256747, simplified at seed time per ADR-0003).
-// (Bulgarian + Ukrainian rows were removed once seeded — they live in the
-// DB now; re-add them here if you ever need a from-scratch reseed.)
 const iasiBoundary = readFileSync(
   new URL("./geo/iasi-county.geojson", import.meta.url),
   "utf8",
@@ -35,10 +63,17 @@ const romanians = [
   27.5055793,
   null,
   iasiBoundary,
+  Math.floor(Date.now() / 1000),
 ];
+
+db.prepare("DELETE FROM ethnic_groups WHERE slug = ?").run(bulgarians[0]);
+db.prepare(
+  `INSERT INTO ethnic_groups ${columns} VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+).run(...bulgarians);
+console.log("seeded bulgarian (Primorsko municipality)");
 
 db.prepare("DELETE FROM ethnic_groups WHERE slug = ?").run(romanians[0]);
 db.prepare(
-  `INSERT INTO ethnic_groups ${columns} VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  `INSERT INTO ethnic_groups ${columns} VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 ).run(...romanians);
 console.log("seeded romanian (Iași County)");
