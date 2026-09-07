@@ -11,8 +11,11 @@ Country → Province/State → District/County → City/Town → Locality
 ```
 
 - Retries automatically when a random point lands in the ocean (~71% of Earth)
+- Deepens to the lowest division within budget: shallow hits (province/state only) get max 1 extra nearest-settlement lookup as context; the leaf honestly falls back to the next upper division (nearest ≠ containing, so it never rewrites the hierarchy)
 - Shows compact chain + detailed hierarchy card + map links + raw JSON on request
-- Handles any country — Japan prefectures, Thai changwat/amphoe/tambon, German Bundesländer, French départements, US counties, etc.
+- Handles any country — Japan prefectures, Thai changwat/amphoe/tambon, German Bundesländer, French départements, US counties, Indonesia regencies, etc.
+- Uses English-friendly local terms (true parallel): Indonesia `county→Regency`, `state→Province`; Japan `state→Prefecture`; OSM key always shown alongside (e.g. `**Regency** (`county`): Mimika`)
+- Annotates skipped OSM levels (e.g. village present but district missing → `⚠ Gap` note, never backfilled)
 - Respects Nominatim policy: identifiable `User-Agent`, ≤1 req/sec, 1.1s spacing
 
 Example:
@@ -28,6 +31,7 @@ Example:
 /random-place --lang ja    # hierarchy in Japanese
 /random-place --json       # plus raw address JSON
 /random-place --quick      # simple uniform RNG (faster)
+/random-place --no-deepen  # skip lowest-division deepen
 ```
 
 Also triggers on: "random place", "random location", "surprise me", "pick a random city", "geo roulette", "take me somewhere random"
@@ -43,7 +47,7 @@ python3 .agents/skills/random-place/scripts/random_place.py --raw  # JSON only f
 ## Output
 
 - **Compact hierarchy:** `Country → Province → District → Place` with flag emoji
-- **Detailed card:** coordinates + OSM/Google links + level-by-level hierarchy + raw `display_name` + OSM metadata + randomness provenance
+- **Detailed card:** coordinates + OSM/Google links + level-by-level hierarchy + raw `display_name` + OSM metadata + randomness provenance + depth line (deepened vs upper-division fallback)
 - **Retries & source:** tries taken, CSPRNG method noted
 
 ## Files
