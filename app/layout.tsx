@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Cascadia_Mono, Inter } from "next/font/google";
+import { Bricolage_Grotesque, Google_Sans_Code, Inter } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -14,8 +14,8 @@ const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
 });
 
-const cascadiaMono = Cascadia_Mono({
-  variable: "--font-cascadia-mono",
+const googleSansCode = Google_Sans_Code({
+  variable: "--font-google-sans-code",
   weight: "variable",
   subsets: ["latin"],
 });
@@ -29,7 +29,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${bricolage.variable} ${cascadiaMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${bricolage.variable} ${googleSansCode.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
