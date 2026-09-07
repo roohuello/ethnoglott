@@ -7,9 +7,13 @@ export type CountryIsoCode = ComponentProps<typeof Flag>["code"];
 // Extend this map as new countries are seeded; unmapped names render
 // text-only (no flag) rather than breaking.
 const COUNTRY_CODES: Record<string, CountryIsoCode> = {
+  Bulgaria: "BG",
   China: "CN",
+  Romania: "RO",
   Singapore: "SG",
   Taiwan: "TW",
+  Tanzania: "TZ",
+  Ukraine: "UA",
   Zambia: "ZM",
 };
 

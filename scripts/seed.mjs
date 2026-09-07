@@ -7,41 +7,38 @@ const DB_PATH = process.env.DATABASE_URL ?? "./data/local.db";
 const db = new Database(DB_PATH);
 db.pragma("journal_mode = WAL");
 
-// Sample only (Mporokoso District drill-down): verifies the district
-// boundary map feature. Figures are approximate — see summary.
-const geojson = readFileSync(
-  "./scripts/geo/mporokoso-district.geojson",
+const columns = `(slug, name, autonym, countries, continent,
+  regions, cities, languages, language_family, language_subfamily, summary, lat, lng, zoom, geojson)`;
+
+// Romania → Iași County: marker pins Trifești village (OSM way 75400532),
+// the mapped presence inside the county; geojson frames the whole of Iași
+// County (OSM relation 2256747, simplified at seed time per ADR-0003).
+// (Bulgarian + Ukrainian rows were removed once seeded — they live in the
+// DB now; re-add them here if you ever need a from-scratch reseed.)
+const iasiBoundary = readFileSync(
+  new URL("./geo/iasi-county.geojson", import.meta.url),
   "utf8",
 );
+const romanians = [
+  "romanian",
+  "Romanian",
+  "Români",
+  JSON.stringify(["Romania"]),
+  "Europe",
+  JSON.stringify([{ name: "Iași County", lat: 47.4584008, lng: 27.5055793 }]),
+  JSON.stringify([{ name: "Trifești", lat: 47.4584008, lng: 27.5055793 }]),
+  JSON.stringify(["Romanian"]),
+  "Indo-European",
+  "Romance",
+  "The Romanians are a Romance ethnic group native to Romania, forming the majority in Iași County including the commune of Trifești. They speak Romanian, an Eastern Romance language written in Latin script. This entry maps their presence at Trifești.",
+  47.4584008,
+  27.5055793,
+  null,
+  iasiBoundary,
+];
 
-const row = db
-  .prepare("SELECT id FROM ethnic_groups WHERE slug = ?")
-  .get("mambwe");
-if (!row) {
-  db.prepare(
-    `INSERT INTO ethnic_groups
-      (slug, name, autonym, population, countries, region, districts,
-       languages, language_family, summary, lat, lng, zoom, geojson)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-  ).run(
-    "mambwe",
-    "Mambwe",
-    "Mambwe",
-    692939,
-    JSON.stringify(["Zambia"]),
-    "Africa",
-    JSON.stringify([
-      { name: "Mporokoso District", lat: -9.610159, lng: 29.766642 },
-    ]),
-    JSON.stringify(["Mambwe (Cimambwe)", "Bemba"]),
-    "Niger-Congo",
-    "Sample entry: the Mambwe of Northern Province, Zambia, mapped here at Mporokoso District. Mambwe children are schooled in Bemba, the regional lingua franca. Population figures vary widely by source (1993 and 2010 estimates differ); treat this headcount as approximate.",
-    -9.610159,
-    29.766642,
-    null,
-    geojson,
-  );
-  console.log("seeded mambwe");
-} else {
-  console.log("mambwe already present");
-}
+db.prepare("DELETE FROM ethnic_groups WHERE slug = ?").run(romanians[0]);
+db.prepare(
+  `INSERT INTO ethnic_groups ${columns} VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+).run(...romanians);
+console.log("seeded romanian (Iași County)");
