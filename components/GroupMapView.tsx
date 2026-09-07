@@ -1,8 +1,15 @@
 "use client";
 
-import L from "leaflet";
-import { GeoJSON, MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import type { FeatureCollection, Geometry } from "geojson";
+import L from "leaflet";
+import {
+  CircleMarker,
+  GeoJSON,
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+} from "react-leaflet";
 
 // Keyless tile source. Carto's endpoints started demanding API keys inside
 // rendered tiles for some traffic — OSM standard needs no account. Swap
@@ -20,7 +27,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
-export interface DistrictPoint {
+export interface RegionPoint {
   name: string;
   lat: number | null;
   lng: number | null;
@@ -31,11 +38,14 @@ interface GroupMapViewProps {
   lng: number | null;
   zoom: number | null;
   label: string;
-  districts?: DistrictPoint[];
+  regions?: RegionPoint[];
+  cities?: RegionPoint[];
   geojson?: string | null;
 }
 
-function parseBoundary(raw: string | null | undefined): FeatureCollection | null {
+function parseBoundary(
+  raw: string | null | undefined,
+): FeatureCollection | null {
   if (!raw) return null;
   try {
     const parsed: unknown = JSON.parse(raw);
@@ -92,21 +102,25 @@ export function GroupMapView({
   lng,
   zoom,
   label,
-  districts = [],
+  regions = [],
+  cities = [],
   geojson,
 }: GroupMapViewProps) {
-  const markers = districts.filter((d) => d.lat != null && d.lng != null);
-  const hasMarkers = markers.length > 0;
+  const markers = regions.filter((d) => d.lat != null && d.lng != null);
+  const cityMarkers = cities.filter((d) => d.lat != null && d.lng != null);
+  const hasMarkers = markers.length > 0 || cityMarkers.length > 0;
   const approximate = !hasMarkers && (lat == null || lng == null);
   const boundary = parseBoundary(geojson);
   const bounds = boundary ? boundsOf(boundary) : null;
 
   const center: LatLng =
-    hasMarkers
+    markers.length > 0
       ? [markers[0].lat as number, markers[0].lng as number]
-      : lat != null && lng != null
-        ? [lat, lng]
-        : [20, 20];
+      : cityMarkers.length > 0
+        ? [cityMarkers[0].lat as number, cityMarkers[0].lng as number]
+        : lat != null && lng != null
+          ? [lat, lng]
+          : [20, 20];
 
   return (
     <div className="relative h-full w-full overflow-hidden rounded-lg border">
@@ -137,6 +151,21 @@ export function GroupMapView({
           <Marker key={m.name} position={[m.lat as number, m.lng as number]}>
             <Popup>{m.name}</Popup>
           </Marker>
+        ))}
+        {cityMarkers.map((m) => (
+          <CircleMarker
+            key={`city-${m.name}`}
+            center={[m.lat as number, m.lng as number]}
+            radius={7}
+            pathOptions={{
+              color: "#ffffff",
+              weight: 2,
+              fillColor: "#0e7490",
+              fillOpacity: 1,
+            }}
+          >
+            <Popup>{m.name}</Popup>
+          </CircleMarker>
         ))}
         {!hasMarkers && !approximate && (
           <Marker position={[lat as number, lng as number]}>

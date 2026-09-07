@@ -29,7 +29,8 @@ export default async function GroupPage({
             lng={group.lng}
             zoom={group.zoom}
             label={group.name}
-            districts={group.districts}
+            regions={group.regions}
+            cities={group.cities}
             geojson={group.geojson}
           />
         </div>

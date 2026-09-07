@@ -14,7 +14,7 @@ export function GroupGridCard({ group }: { group: EthnicGroup }) {
         <p className="text-sm text-muted-foreground">{group.name}</p>
       )}
       <p className="mt-2 text-sm text-muted-foreground">
-        {[group.region, group.languageFamily].filter(Boolean).join(" · ") ||
+        {[group.continent, group.languageFamily].filter(Boolean).join(" · ") ||
           "—"}
       </p>
     </Link>

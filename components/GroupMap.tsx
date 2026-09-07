@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import type { DistrictPoint } from "./GroupMapView";
+import type { RegionPoint } from "./GroupMapView";
 
 const GroupMapView = dynamic(
   () => import("./GroupMapView").then((m) => m.GroupMapView),
@@ -20,7 +20,8 @@ interface GroupMapProps {
   lng: number | null;
   zoom: number | null;
   label: string;
-  districts?: DistrictPoint[];
+  regions?: RegionPoint[];
+  cities?: RegionPoint[];
   geojson?: string | null;
 }
 
@@ -30,4 +31,4 @@ export function GroupMap(props: GroupMapProps) {
   return <GroupMapView {...props} />;
 }
 
-export type { DistrictPoint };
+export type { RegionPoint };

@@ -17,6 +17,29 @@ function Row({
   );
 }
 
+// Region names carry their lowest-admin designator in the stored string
+// (e.g. "Primorsko municipality", "Kolarivska municipality" — Ukraine's
+// rural hromada is stored under the same municipality term — or "Iași
+// County"). The designator renders as a small pill to distinguish the
+// admin level from the place name.
+function RegionName({ name }: { name: string }) {
+  const designators = ["municipality", "county"];
+  const lower = name.toLowerCase();
+  for (const designator of designators) {
+    if (lower.endsWith(` ${designator}`)) {
+      return (
+        <>
+          {name.slice(0, -designator.length - 1)}
+          <span className="ml-2 inline-block rounded-full bg-secondary px-2 py-0.5 align-middle font-mono text-xs font-medium text-secondary-foreground">
+            {designator}
+          </span>
+        </>
+      );
+    }
+  }
+  return <>{name}</>;
+}
+
 // Uniform detail card — every group renders the same row structure;
 // NULL fields hide their row (see CONTEXT.md).
 export function GroupDetailCard({ group }: { group: EthnicGroup }) {
@@ -29,6 +52,21 @@ export function GroupDetailCard({ group }: { group: EthnicGroup }) {
         <p className="mt-1 text-xl text-muted-foreground">{group.name}</p>
       )}
       <dl className="mt-4">
+        {group.languages.length > 0 && (
+          <Row label="Languages">
+            <ul className="flex flex-col gap-1">
+              {group.languages.map((l) => (
+                <li key={l}>{l}</li>
+              ))}
+            </ul>
+          </Row>
+        )}
+        {group.languageFamily && (
+          <Row label="Language Family">
+            {group.languageFamily}{" "}
+            {group.languageSubfamily && `> ${group.languageSubfamily}`}
+          </Row>
+        )}
         <Row label="Countries">
           {group.countries.length > 0 ? (
             <ul className="flex flex-col gap-1">
@@ -53,30 +91,26 @@ export function GroupDetailCard({ group }: { group: EthnicGroup }) {
             "—"
           )}
         </Row>
-        {group.region && <Row label="Region">{group.region}</Row>}
-        {group.districts.length > 0 && (
-          <Row label="District">
+        {group.continent && <Row label="Continent">{group.continent}</Row>}
+        {group.regions.length > 0 && (
+          <Row label="Region">
             <ul className="flex flex-col gap-1">
-              {group.districts.map((d) => (
-                <li key={d.name}>{d.name}</li>
+              {group.regions.map((d) => (
+                <li key={d.name}>
+                  <RegionName name={d.name} />
+                </li>
               ))}
             </ul>
           </Row>
         )}
-        {group.languages.length > 0 && (
-          <Row label="Languages">
+        {group.cities.length > 0 && (
+          <Row label="Cities">
             <ul className="flex flex-col gap-1">
-              {group.languages.map((l) => (
-                <li key={l}>{l}</li>
+              {group.cities.map((c) => (
+                <li key={c.name}>{c.name}</li>
               ))}
             </ul>
           </Row>
-        )}
-        {group.languageFamily && (
-          <Row label="Language family">{group.languageFamily}</Row>
-        )}
-        {group.population != null && (
-          <Row label="Population">{group.population.toLocaleString()}</Row>
         )}
       </dl>
       {group.summary && <p className="mt-4 leading-7">{group.summary}</p>}
