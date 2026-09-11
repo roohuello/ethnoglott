@@ -1,27 +1,22 @@
-import { mkdirSync } from "node:fs";
-import { dirname } from "node:path";
-import Database from "better-sqlite3";
-import { drizzle } from "drizzle-orm/better-sqlite3";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 import * as schema from "./schema";
 
-const DB_PATH = process.env.DATABASE_URL ?? "./data/local.db";
-
-mkdirSync(dirname(DB_PATH), { recursive: true });
+// DDL/studio only; runtime reads go through PostgREST (lib/data/groups.ts)
+// because the Supavisor pooler path is stalled.
+const DATABASE_URL = process.env.DATABASE_URL;
+if (!DATABASE_URL) throw new Error("DATABASE_URL is not set");
 
 const globalForDb = globalThis as unknown as {
-  __sqlite?: Database.Database;
+  __pg?: ReturnType<typeof postgres>;
 };
 
-const sqlite =
-  globalForDb.__sqlite ??
-  (() => {
-    const db = new Database(DB_PATH);
-    db.pragma("journal_mode = WAL");
-    db.pragma("foreign_keys = ON");
-    return db;
-  })();
+// Pooler (Supavisor transaction mode) lacks prepared statements; disable them.
+const client =
+  globalForDb.__pg ??
+  postgres(DATABASE_URL, { prepare: false, max: 1, connect_timeout: 10 });
 
-if (process.env.NODE_ENV !== "production") globalForDb.__sqlite = sqlite;
+if (process.env.NODE_ENV !== "production") globalForDb.__pg = client;
 
-export const db = drizzle(sqlite, { schema });
+export const db = drizzle(client, { schema });
 export { schema };

@@ -21,7 +21,7 @@ URL identity for a group (`/groups/[slug]`), derived from Name, unique.
 Stays ASCII even when Autonym carries diacritics.
 
 ## HomelandCentroid
-A group-level `lat/lng + zoom` used as the map marker anchor and as the
+A group-level `lat/lng` used as the map marker anchor and as the
 fallback view when a group has no RegionEntries. Not a territory claim.
 
 ## RegionEntry

@@ -1,0 +1,1 @@
+ALTER TABLE "ethnic_groups" DROP COLUMN "zoom";
