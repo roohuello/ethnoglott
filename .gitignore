@@ -36,13 +36,12 @@ yarn-error.log*
 # vercel
 .vercel
 
-# local sqlite data (migrations in lib/db/migrations are committed)
-/data/*
-!/data/.gitkeep
-
 # generated flag assets (restored by `postinstall`: react-flagpack)
 /public/flags/
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# codegraph local index
+.codegraph/
