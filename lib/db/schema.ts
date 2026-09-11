@@ -27,6 +27,13 @@ export const ethnicGroups = sqliteTable("ethnic_groups", {
     .$defaultFn(() => []),
   languageFamily: text("language_family"),
   languageSubfamily: text("language_subfamily"),
+  // Glottolog page URLs keyed by language name, e.g.
+  // { Kalaallisut: "https://glottolog.org/resource/languoid/id/kala1399" }.
+  // The UI links every Languages entry that has a URL here.
+  glottologUrls: text("glottolog_urls", { mode: "json" })
+    .notNull()
+    .$type<Record<string, string>>()
+    .$defaultFn(() => ({})),
   summary: text("summary").notNull().default(""),
   lat: real("lat"),
   lng: real("lng"),

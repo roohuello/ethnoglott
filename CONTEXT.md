@@ -9,9 +9,10 @@ English exonym in singular form (e.g. `Bulgarian`, not `Bulgarians`).
 Source of the Slug; secondary display under the heading.
 
 ## Autonym
-The group's self-name in its own language (e.g. `Hànzú`). Nullable.
-Romanized Latin-script form, proper case (e.g. `Bŭlgari`, not `българи`
-or `bŭlgari`). PRIMARY display heading; falls back to Name when NULL.
+The group's self-name in its own language, singular form (e.g. `Hànzú`).
+Nullable. Romanized Latin-script form, proper case (e.g. `Bŭlgarin`, not
+`българин` or `bŭlgarin`). PRIMARY display heading; falls back to Name
+when NULL.
 Searched alongside Name. When equal to Name, the subline is hidden as
 redundant.
 
@@ -24,8 +25,8 @@ A group-level `lat/lng + zoom` used as the map marker anchor and as the
 fallback view when a group has no RegionEntries. Not a territory claim.
 
 ## RegionEntry
-One `{name, lat, lng}` presence of a group in a lowest-admin division
-(municipality, district). Each entry gets a map marker. An entry without
+One `{name, lat, lng}` presence of a group in an admin division
+(municipality, district, county, arrondissement). Each entry gets a map marker. An entry without
 a polygon feature renders marker-only.
 
 ## Regions
@@ -60,6 +61,13 @@ Spoken language(s), `languages[]`. A group may list many.
 ## LanguageFamily
 Single filter key per group (e.g. `Sino-Tibetan`). Simplification for
 filtering; multilingual edge cases collapse to one family in v1.
+
+## GlottologUrls
+Map of language name → Glottolog page URL, one entry per value in
+`languages[]` (e.g. `{ Kalaallisut:
+`https://glottolog.org/resource/languoid/id/kala1399` }`). Every language
+with a URL renders as a link in the UI; languages without one render as
+plain text.
 
 ## Summary
 Hand-written 1–3 sentence overview.

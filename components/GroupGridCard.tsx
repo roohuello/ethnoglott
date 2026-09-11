@@ -11,7 +11,9 @@ export function GroupGridCard({ group }: { group: EthnicGroup }) {
         {group.autonym ?? group.name}
       </h2>
       {group.autonym && group.autonym !== group.name && (
-        <p className="text-sm text-muted-foreground">{group.name}</p>
+        <p className="font-mono text-sm text-muted-foreground italic">
+          {group.name}
+        </p>
       )}
       <p className="mt-2 text-sm text-muted-foreground">
         {[group.continent, group.languageFamily].filter(Boolean).join(" · ") ||
