@@ -11,13 +11,10 @@ import {
   TileLayer,
 } from "react-leaflet";
 
-// Keyless tile source. Carto's endpoints started demanding API keys inside
-// rendered tiles for some traffic — OSM standard needs no account. Swap
-// this one line if providers change again.
+// Keyless tiles: Carto began requiring keys, OSM needs none; swap this line if providers change.
 const TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 
-// Leaflet's default marker images use relative paths that break under
-// bundlers — point them at the version-pinned CDN instead.
+// Leaflet marker images break under bundlers; use the version-pinned CDN.
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)
   ._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -36,7 +33,6 @@ export interface RegionPoint {
 interface GroupMapViewProps {
   lat: number | null;
   lng: number | null;
-  zoom: number | null;
   label: string;
   regions?: RegionPoint[];
   cities?: RegionPoint[];
@@ -100,7 +96,6 @@ function boundsOf(collection: FeatureCollection): LatLng[] | null {
 export function GroupMapView({
   lat,
   lng,
-  zoom,
   label,
   regions = [],
   cities = [],
@@ -123,12 +118,12 @@ export function GroupMapView({
           : [20, 20];
 
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-lg border">
+    <div className="relative h-full w-full overflow-hidden rounded-3xl border">
       <MapContainer
         bounds={bounds ?? undefined}
         boundsOptions={bounds ? { padding: [20, 20] } : undefined}
         center={bounds ? undefined : center}
-        zoom={bounds ? undefined : (zoom ?? (approximate ? 1 : 4))}
+        zoom={bounds ? undefined : approximate ? 1 : 4}
         style={{ height: "100%", width: "100%", minHeight: 320 }}
       >
         <TileLayer
@@ -174,7 +169,7 @@ export function GroupMapView({
         )}
       </MapContainer>
       {approximate && (
-        <span className="absolute top-3 left-3 z-[500] rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">
+        <span className="absolute top-3 left-3 z-500 rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">
           Approximate location
         </span>
       )}

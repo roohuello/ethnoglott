@@ -1,11 +1,9 @@
 import type { ComponentProps } from "react";
 import type Flag from "react-flagpack";
 
-export type CountryIsoCode = ComponentProps<typeof Flag>["code"];
+type CountryIsoCode = ComponentProps<typeof Flag>["code"];
 
-// English display name → ISO 3166-1 alpha-2 code for react-flagpack.
-// Extend this map as new countries are seeded; unmapped names render
-// text-only (no flag) rather than breaking.
+// Display name → ISO alpha-2 for react-flagpack; unmapped names render text-only.
 const COUNTRY_CODES: Record<string, CountryIsoCode> = {
   Bulgaria: "BG",
   China: "CN",

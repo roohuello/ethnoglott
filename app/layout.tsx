@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Google_Sans_Code, Inter } from "next/font/google";
+import { Bricolage_Grotesque, Google_Sans_Code } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
-  weight: "variable",
-  subsets: ["latin"],
-});
-
 const bricolage = Bricolage_Grotesque({
-  variable: "--font-bricolage",
+  variable: "--font-sans",
   weight: "variable",
   subsets: ["latin"],
 });
@@ -29,9 +23,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${bricolage.variable} ${googleSansCode.variable} h-full antialiased`}
+      className={`${bricolage.variable} ${googleSansCode.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="flex min-h-dvh flex-col p-6 lg:h-dvh lg:overflow-hidden">
+        {children}
+      </body>
     </html>
   );
 }

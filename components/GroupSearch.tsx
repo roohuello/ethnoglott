@@ -1,10 +1,14 @@
 "use client";
 
+import { IconSearch } from "@tabler/icons-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState, useTransition } from "react";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/InputGroup";
 
-// Standalone search bar. Typing updates the URL (debounced), which
-// re-renders the server grid.
 export function GroupSearch() {
   const router = useRouter();
   const pathname = usePathname();
@@ -40,16 +44,20 @@ export function GroupSearch() {
   }, [q, urlQuery, apply]);
 
   return (
-    <div className="mx-auto mt-6 w-full max-w-xl">
-      <input
-        id="group-search"
-        type="search"
-        value={q}
-        onChange={(e) => setQ(e.target.value)}
-        placeholder="Search groups…"
-        aria-label="Search groups"
-        className="glass glass-input h-12 w-full rounded-lg border border-white/30 px-4 text-base outline-none focus-visible:border-ring dark:border-white/10"
-      />
+    <div className="mx-auto w-full max-w-xl">
+      <InputGroup className="h-12 gap-2 rounded-3xl border-border bg-background">
+        <InputGroupAddon>
+          <IconSearch aria-hidden />
+        </InputGroupAddon>
+        <InputGroupInput
+          id="group-search"
+          type="search"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Search groups…"
+          aria-label="Search groups"
+        />
+      </InputGroup>
       {isPending && (
         <output className="mt-2 block text-center text-xs text-muted-foreground">
           Searching…

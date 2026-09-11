@@ -7,7 +7,7 @@ interface HomeSearchParams {
   q?: string;
 }
 
-// Reads SQLite at request time under the Bun runtime.
+// Reads Supabase at request time; always dynamic.
 export const dynamic = "force-dynamic";
 
 export default async function Home({
@@ -19,17 +19,19 @@ export default async function Home({
   const groups = await listGroups({ q });
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-6 py-12">
-      <h1 className="text-center font-heading text-4xl font-semibold tracking-tight">
-        Ethnoglott
-      </h1>
-      <p className="mt-2 text-center text-muted-foreground">
-        Saving the world's ethnic languages before they're lost
-      </p>
+    <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 lg:min-h-0 lg:overflow-hidden">
+      <header className="flex flex-col items-center gap-2 text-center">
+        <h1 className="font-heading text-4xl font-semibold tracking-tight">
+          Ethnoglott
+        </h1>
+        <p className="text-muted-foreground">
+          Saving the world's ethnic languages before they're lost
+        </p>
+      </header>
 
       <Suspense
         fallback={
-          <div className="mx-auto mt-6 flex h-12 w-full max-w-xl items-center justify-center text-sm text-muted-foreground">
+          <div className="mx-auto flex h-12 w-full max-w-xl items-center justify-center text-sm text-muted-foreground">
             Loading search…
           </div>
         }
@@ -37,12 +39,12 @@ export default async function Home({
         <GroupSearch />
       </Suspense>
 
-      <output className="mt-6 text-sm text-muted-foreground">
-        {groups.length === 0
-          ? "No groups match your search."
-          : `${groups.length} group${groups.length === 1 ? "" : "s"}`}
-      </output>
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {groups.length === 0 && (
+        <output className="text-sm text-muted-foreground">
+          No groups match your search.
+        </output>
+      )}
+      <div className="flex flex-wrap content-start gap-2 lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:pr-1">
         {groups.map((g) => (
           <GroupGridCard key={g.slug} group={g} />
         ))}

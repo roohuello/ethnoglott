@@ -4,7 +4,7 @@ import { GroupDetailCard } from "@/components/GroupDetailCard";
 import { GroupMap } from "@/components/GroupMap";
 import { getGroupBySlug } from "@/lib/data/groups";
 
-// Reads SQLite at request time under the Bun runtime.
+// Reads Supabase at request time; always dynamic.
 export const dynamic = "force-dynamic";
 
 export default async function GroupPage({
@@ -17,17 +17,18 @@ export default async function GroupPage({
   if (!group) notFound();
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 py-8">
+    <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col lg:min-h-0 lg:overflow-hidden">
       <Link href="/" className="text-sm text-muted-foreground hover:underline">
         ← All groups
       </Link>
-      <div className="mt-4 grid flex-1 gap-6 lg:grid-cols-[40%_60%]">
-        <GroupDetailCard group={group} />
-        <div className="h-[420px] lg:sticky lg:top-6 lg:h-[calc(100vh-6rem)]">
+      <div className="mt-4 grid flex-1 gap-6 lg:min-h-0 lg:grid-cols-[4fr_6fr]">
+        <div className="lg:min-h-0 lg:overflow-hidden lg:p-px">
+          <GroupDetailCard group={group} />
+        </div>
+        <div className="h-full">
           <GroupMap
             lat={group.lat}
             lng={group.lng}
-            zoom={group.zoom}
             label={group.name}
             regions={group.regions}
             cities={group.cities}
