@@ -32,6 +32,7 @@ export type Database = {
           name: string;
           regions: Json;
           slug: string;
+          subgroups: Json;
           summary: string;
           updated_at: number;
         };
@@ -52,6 +53,7 @@ export type Database = {
           name: string;
           regions?: Json;
           slug: string;
+          subgroups?: Json;
           summary?: string;
           updated_at?: number;
         };
@@ -72,6 +74,7 @@ export type Database = {
           name?: string;
           regions?: Json;
           slug?: string;
+          subgroups?: Json;
           summary?: string;
           updated_at?: number;
         };

@@ -62,6 +62,11 @@ Spoken language(s), `languages[]`. A group may list many.
 Single filter key per group (e.g. `Sino-Tibetan`). Simplification for
 filtering; multilingual edge cases collapse to one family in v1.
 
+## Subgroups
+Named subdivisions of a group, `subgroups[]` plain strings (e.g.
+`Hadendowa`, `Amarar`). Single source of truth (no separate table).
+Empty hides the card row. Searched alongside Name.
+
 ## GlottologUrls
 Map of language name → Glottolog page URL, one entry per value in
 `languages[]` (e.g. `{ Kalaallisut:
