@@ -1,0 +1,59 @@
+-- Versioned single-row upsert template for ethnic_groups.
+-- Run: Supabase dashboard SQL editor (service_role) OR psql "$DIRECT_URL" -f this-file.sql
+-- Never via anon client (anon has SELECT + EXECUTE search_group_chips only).
+--
+-- SYNC RULES (hand-check before running; no app-side validator by design):
+--   1. slug: ASCII, unique, derived from Name (e.g. 'bulgarian').
+--   2. every regions[].country ∈ countries[]  AND  every regions[] entry has {name, lat, lng}.
+--   3. every languages[] value has a matching glottolog_urls key (or omit URL + render plain text).
+--   4. continent ∈ (Africa, Asia, Europe, North America, South America, Oceania, Middle East).
+--   5. lat BETWEEN -90 AND 90, lng BETWEEN -180 AND 180; geojson NULL or FeatureCollection ≤ ~100KB.
+--   6. countries[] uses ISO 3166-1 English names; diaspora excluded (homeland only).
+
+INSERT INTO ethnic_groups (
+  slug, name, autonym,
+  countries, continent,
+  regions, cities,
+  languages, language_family, language_subfamily, glottolog_urls,
+  summary, lat, lng, geojson, image_url
+) VALUES (
+  'example-slug',            -- 1. ASCII unique
+  'Example',                 -- English exonym, singular
+  NULL,                      -- or 'SelfName' romanized Latin, proper case
+  '["Exampleland"]',         -- 6. JSON array of country names
+  'Europe',                  -- 4. continent enum
+  '[{"name": "Example District", "lat": 42.7, "lng": 23.3}]',  -- 2. RegionEntry[]
+  '[]',                      -- CityEntry[] (same shape) or []
+  '["Exampleese"]',          -- languages[]
+  'Example-Family',          -- language_family filter key (nullable)
+  NULL,                      -- language_subfamily (nullable)
+  '{"Exampleese": "https://glottolog.org/resource/languoid/id/exam1234"}',  -- 3.
+  'Hand-written 1–3 sentence overview.',
+  42.7,                      -- 5. centroid lat (nullable)
+  23.3,                      -- 5. centroid lng (nullable)
+  NULL,                      -- 5. FeatureCollection text or NULL
+  NULL                       -- image_url (nullable)
+)
+ON CONFLICT (slug) DO UPDATE SET
+  name = EXCLUDED.name,
+  autonym = EXCLUDED.autonym,
+  countries = EXCLUDED.countries,
+  continent = EXCLUDED.continent,
+  regions = EXCLUDED.regions,
+  cities = EXCLUDED.cities,
+  languages = EXCLUDED.languages,
+  language_family = EXCLUDED.language_family,
+  language_subfamily = EXCLUDED.language_subfamily,
+  glottolog_urls = EXCLUDED.glottolog_urls,
+  summary = EXCLUDED.summary,
+  lat = EXCLUDED.lat,
+  lng = EXCLUDED.lng,
+  geojson = EXCLUDED.geojson,
+  image_url = EXCLUDED.image_url,
+  updated_at = extract(epoch from now())::integer;
+
+-- Post-checks (run after, expect 1 row each / no rows):
+-- SELECT slug, name FROM ethnic_groups WHERE slug = 'example-slug';
+-- SELECT slug FROM ethnic_groups
+--  WHERE NOT (continent IN ('Africa','Asia','Europe','North America','South America','Oceania','Middle East'));
+-- SELECT slug FROM ethnic_groups WHERE lat NOT BETWEEN -90 AND 90 OR lng NOT BETWEEN -180 AND 180;
