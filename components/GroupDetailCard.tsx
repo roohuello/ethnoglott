@@ -14,7 +14,39 @@ import {
   TooltipTrigger,
 } from "@/components/ui/Tooltip";
 import { countryCode } from "@/lib/data/country-codes";
-import type { EthnicGroup } from "@/lib/db/schema";
+import type { EthnicGroup, Json } from "@/lib/db/database.types";
+import type { RegionPoint } from "./GroupMapView";
+
+function asStrings(value: Json): string[] {
+  return Array.isArray(value)
+    ? value.filter((e): e is string => typeof e === "string")
+    : [];
+}
+
+function asPoints(value: Json): RegionPoint[] {
+  if (!Array.isArray(value)) return [];
+  const out: RegionPoint[] = [];
+  for (const e of value) {
+    if (typeof e !== "object" || e === null || Array.isArray(e)) continue;
+    if (typeof e.name !== "string") continue;
+    out.push({
+      name: e.name,
+      lat: typeof e.lat === "number" ? e.lat : null,
+      lng: typeof e.lng === "number" ? e.lng : null,
+    });
+  }
+  return out;
+}
+
+function asStringMap(value: Json): Record<string, string> {
+  if (typeof value !== "object" || value === null || Array.isArray(value))
+    return {};
+  return Object.fromEntries(
+    Object.entries(value).filter(
+      (entry): entry is [string, string] => typeof entry[1] === "string",
+    ),
+  );
+}
 
 function Row({
   label,
@@ -47,11 +79,19 @@ function Row({
 function RegionName({ name }: { name: string }) {
   const designators = [
     "municipality",
+    "kommunia",
+    "audany",
     "hromada",
     "obshtina",
+    "município",
+    "comene",
+    "občina",
+    "comune",
     "county",
     "județul",
     "district",
+    "район",
+    "rajon",
     "arrondissement",
     "arrondîment",
     "inkhundla",
@@ -63,7 +103,16 @@ function RegionName({ name }: { name: string }) {
     "aimag",
     "gobol",
     "gobolka",
+    "degmada",
+    "bezirk",
+    "megye",
+    "járás",
+    "kommune",
     "kommun",
+    "phường",
+    "tỉnh",
+    "nahiyisi",
+    "island",
   ];
   const aliasMatch = name.match(/^(.*?)\s+(\([^()]*\))$/);
   const base = aliasMatch ? aliasMatch[1] : name;
@@ -97,13 +146,18 @@ function RegionName({ name }: { name: string }) {
 
 // Uniform detail card; NULL fields hide their row (see CONTEXT.md).
 export function GroupDetailCard({ group }: { group: EthnicGroup }) {
+  const languages = asStrings(group.languages);
+  const countries = asStrings(group.countries);
+  const regions = asPoints(group.regions);
+  const cities = asPoints(group.cities);
+  const glottologUrls = asStringMap(group.glottolog_urls);
   return (
     <Card className="lg:h-full lg:min-h-0">
       <CardHeader className="shrink-0">
         <CardTitle className="text-4xl font-bold tracking-tight">
-          {group.autonym ?? group.name}
+          {group.endonym ?? group.name}
         </CardTitle>
-        {group.autonym && group.autonym !== group.name && (
+        {group.endonym && (
           <CardDescription className="font-mono text-xl">
             {group.name}
           </CardDescription>
@@ -111,44 +165,43 @@ export function GroupDetailCard({ group }: { group: EthnicGroup }) {
       </CardHeader>
       <CardContent className="flex flex-col gap-8 lg:min-h-0 lg:flex-1">
         <dl className="min-h-0 overflow-hidden">
-          {group.languages.length > 0 && (
+          {languages.length > 0 && (
             <Row
               label="Languages"
               hint="Spoken language(s); entries with a Glottolog page link out."
             >
-              <ul className="flex flex-col gap-1">
-                {group.languages.map((l) => (
-                  <li key={l}>
-                    {group.glottologUrls?.[l] ? (
-                      <a
-                        href={group.glottologUrls[l]}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="underline decoration-foreground/30 underline-offset-2 hover:decoration-foreground"
-                      >
-                        {l}
-                      </a>
-                    ) : (
-                      l
-                    )}
-                  </li>
-                ))}
-              </ul>
+              {languages.map((l, i) => (
+                <span key={l}>
+                  {i > 0 && ", "}
+                  {glottologUrls?.[l] ? (
+                    <a
+                      href={glottologUrls[l]}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline decoration-foreground/30 underline-offset-2 hover:decoration-foreground"
+                    >
+                      {l}
+                    </a>
+                  ) : (
+                    l
+                  )}
+                </span>
+              ))}
             </Row>
           )}
-          {group.languageFamily && (
+          {group.language_family && (
             <Row
               label="Language Family"
               hint="One filter key for the primary language."
             >
-              {group.languageFamily}{" "}
-              {group.languageSubfamily && `> ${group.languageSubfamily}`}
+              {group.language_family}{" "}
+              {group.language_subfamily && `> ${group.language_subfamily}`}
             </Row>
           )}
           <Row label="Countries" hint="Homeland only — diaspora excluded.">
-            {group.countries.length > 0 ? (
+            {countries.length > 0 ? (
               <ul className="flex flex-col gap-1">
-                {group.countries.map((c) => {
+                {countries.map((c) => {
                   const code = countryCode(c);
                   return (
                     <li key={c} className="flex items-center gap-2">
@@ -174,13 +227,13 @@ export function GroupDetailCard({ group }: { group: EthnicGroup }) {
               {group.continent}
             </Row>
           )}
-          {group.regions.length > 0 && (
+          {regions.length > 0 && (
             <Row
               label="Region"
               hint="One marker per division; polygons show extent, not ownership."
             >
               <ul className="flex flex-col gap-1">
-                {group.regions.map((d) => (
+                {regions.map((d) => (
                   <li key={d.name}>
                     <RegionName name={d.name} />
                   </li>
@@ -188,12 +241,12 @@ export function GroupDetailCard({ group }: { group: EthnicGroup }) {
               </ul>
             </Row>
           )}
-          {group.cities.length > 0 && (
+          {cities.length > 0 && (
             <Row
               label="Cities"
               hint="Major towns as dots, distinct from region pins."
             >
-              {group.cities.map((c) => c.name).join(", ")}
+              {cities.map((c) => c.name).join(", ")}
             </Row>
           )}
         </dl>

@@ -10,7 +10,7 @@ export function GroupGridCard({ group }: { group: GroupChip }) {
       render={<Link href={`/groups/${group.slug}`} />}
       nativeButton={false}
     >
-      {group.autonym ?? group.name}
+      {group.endonym ?? group.name}
     </Button>
   );
 }

@@ -1,5 +1,3 @@
-// Hand-maintained mirror of `supabase gen types` (no CLI here); regenerate
-// from the live DB when the schema changes and replace this file wholesale.
 export type Json =
   | string
   | number
@@ -8,81 +6,222 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
-export interface Database {
+export type EthnicGroup = Database["public"]["Tables"]["ethnic_groups"]["Row"];
+
+export type Database = {
+  __InternalSupabase: {
+    PostgrestVersion: "14.5";
+  };
   public: {
     Tables: {
       ethnic_groups: {
         Row: {
-          id: number;
-          slug: string;
-          name: string;
-          autonym: string | null;
-          countries: Json;
-          continent: string;
-          regions: Json;
+          endonym: string | null;
           cities: Json;
-          languages: Json;
+          continent: string;
+          countries: Json;
+          geojson: string | null;
+          glottolog_urls: Json;
+          id: number;
+          image_url: string | null;
           language_family: string | null;
           language_subfamily: string | null;
-          glottolog_urls: Json;
-          summary: string;
+          languages: Json;
           lat: number | null;
           lng: number | null;
-          geojson: string | null;
-          image_url: string | null;
+          name: string;
+          regions: Json;
+          slug: string;
+          summary: string;
           updated_at: number;
         };
         Insert: {
-          id?: number;
-          slug: string;
-          name: string;
-          autonym?: string | null;
-          countries?: Json;
-          continent?: string;
-          regions?: Json;
+          endonym?: string | null;
           cities?: Json;
-          languages?: Json;
+          continent?: string;
+          countries?: Json;
+          geojson?: string | null;
+          glottolog_urls?: Json;
+          id?: number;
+          image_url?: string | null;
           language_family?: string | null;
           language_subfamily?: string | null;
-          glottolog_urls?: Json;
-          summary?: string;
+          languages?: Json;
           lat?: number | null;
           lng?: number | null;
-          geojson?: string | null;
-          image_url?: string | null;
+          name: string;
+          regions?: Json;
+          slug: string;
+          summary?: string;
           updated_at?: number;
         };
         Update: {
-          id?: number;
-          slug?: string;
-          name?: string;
-          autonym?: string | null;
-          countries?: Json;
-          continent?: string;
-          regions?: Json;
+          endonym?: string | null;
           cities?: Json;
-          languages?: Json;
+          continent?: string;
+          countries?: Json;
+          geojson?: string | null;
+          glottolog_urls?: Json;
+          id?: number;
+          image_url?: string | null;
           language_family?: string | null;
           language_subfamily?: string | null;
-          glottolog_urls?: Json;
-          summary?: string;
+          languages?: Json;
           lat?: number | null;
           lng?: number | null;
-          geojson?: string | null;
-          image_url?: string | null;
+          name?: string;
+          regions?: Json;
+          slug?: string;
+          summary?: string;
           updated_at?: number;
         };
         Relationships: [];
       };
     };
-    Views: Record<string, never>;
+    Views: {
+      [_ in never]: never;
+    };
     Functions: {
       search_group_chips: {
-        Args: { q?: string; max_rows?: number };
-        Returns: { slug: string; name: string; autonym: string | null }[];
+        Args: { max_rows?: number; q?: string };
+        Returns: {
+          endonym: string;
+          name: string;
+          slug: string;
+        }[];
       };
     };
-    Enums: Record<string, never>;
-    CompositeTypes: Record<string, never>;
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
+    };
   };
+};
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">;
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<
+  keyof Database,
+  "public"
+>];
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
 }
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R;
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R;
+      }
+      ? R
+      : never
+    : never;
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I;
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I;
+      }
+      ? I
+      : never
+    : never;
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U;
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U;
+      }
+      ? U
+      : never
+    : never;
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never;
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals;
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never;
+
+export const Constants = {
+  public: {
+    Enums: {},
+  },
+} as const;

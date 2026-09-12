@@ -8,17 +8,17 @@ Never `tribe` (pejorative) or `nationality` (citizenship ≠ ethnicity).
 English exonym in singular form (e.g. `Bulgarian`, not `Bulgarians`).
 Source of the Slug; secondary display under the heading.
 
-## Autonym
+## Endonym
 The group's self-name in its own language, singular form (e.g. `Hànzú`).
 Nullable. Romanized Latin-script form, proper case (e.g. `Bŭlgarin`, not
 `българин` or `bŭlgarin`). PRIMARY display heading; falls back to Name
 when NULL.
-Searched alongside Name. When equal to Name, the subline is hidden as
-redundant.
+Searched alongside Name. Always shown as subline when present, even when
+equal to Name.
 
 ## Slug
 URL identity for a group (`/groups/[slug]`), derived from Name, unique.
-Stays ASCII even when Autonym carries diacritics.
+Stays ASCII even when Endonym carries diacritics.
 
 ## HomelandCentroid
 A group-level `lat/lng` used as the map marker anchor and as the
