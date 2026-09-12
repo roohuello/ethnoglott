@@ -7,7 +7,6 @@ interface HomeSearchParams {
   q?: string;
 }
 
-// Reads Supabase at request time; always dynamic.
 export const dynamic = "force-dynamic";
 
 export default async function Home({

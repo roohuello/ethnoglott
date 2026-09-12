@@ -2,9 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GroupDetailCard } from "@/components/GroupDetailCard";
 import { GroupMap } from "@/components/GroupMap";
+import type { RegionPoint } from "@/components/GroupMapView";
 import { getGroupBySlug } from "@/lib/data/groups";
 
-// Reads Supabase at request time; always dynamic.
 export const dynamic = "force-dynamic";
 
 export default async function GroupPage({
@@ -30,8 +30,8 @@ export default async function GroupPage({
             lat={group.lat}
             lng={group.lng}
             label={group.name}
-            regions={group.regions}
-            cities={group.cities}
+            regions={group.regions as unknown as RegionPoint[]}
+            cities={group.cities as unknown as RegionPoint[]}
             geojson={group.geojson}
           />
         </div>

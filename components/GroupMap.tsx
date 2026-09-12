@@ -24,7 +24,6 @@ interface GroupMapProps {
   geojson?: string | null;
 }
 
-// Client-only boundary: Leaflet needs window.
 export function GroupMap(props: GroupMapProps) {
   return <GroupMapView {...props} />;
 }

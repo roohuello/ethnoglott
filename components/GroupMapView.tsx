@@ -11,10 +11,8 @@ import {
   TileLayer,
 } from "react-leaflet";
 
-// Keyless tiles: Carto began requiring keys, OSM needs none; swap this line if providers change.
 const TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 
-// Leaflet marker images break under bundlers; use the version-pinned CDN.
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)
   ._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -61,13 +59,21 @@ function parseBoundary(
 type LatLng = [number, number];
 
 function collectPositions(geometry: Geometry, out: LatLng[]): void {
+  const push = (pos: unknown) => {
+    if (
+      Array.isArray(pos) &&
+      pos.length >= 2 &&
+      typeof pos[0] === "number" &&
+      typeof pos[1] === "number"
+    ) {
+      out.push([pos[1], pos[0]]);
+    }
+  };
   if (geometry.type === "Polygon") {
-    for (const ring of geometry.coordinates)
-      for (const pos of ring) out.push([pos[1], pos[0]]);
+    for (const ring of geometry.coordinates) for (const pos of ring) push(pos);
   } else if (geometry.type === "MultiPolygon") {
     for (const poly of geometry.coordinates)
-      for (const ring of poly)
-        for (const pos of ring) out.push([pos[1], pos[0]]);
+      for (const ring of poly) for (const pos of ring) push(pos);
   }
 }
 
