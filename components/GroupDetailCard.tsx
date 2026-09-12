@@ -70,7 +70,7 @@ function Row({
           </Tooltip>
         )}
       </dt>
-      <dd>{children}</dd>
+      <dd className="leading-snug">{children}</dd>
     </div>
   );
 }
@@ -90,6 +90,7 @@ function RegionName({ name }: { name: string }) {
     "county",
     "județul",
     "district",
+    "ضلع",
     "район",
     "rajon",
     "arrondissement",
@@ -113,6 +114,12 @@ function RegionName({ name }: { name: string }) {
     "tỉnh",
     "nahiyisi",
     "island",
+    "mahalliyya",
+    "zil",
+    "zila",
+    "fu",
+    "região",
+    "region",
   ];
   const aliasMatch = name.match(/^(.*?)\s+(\([^()]*\))$/);
   const base = aliasMatch ? aliasMatch[1] : name;
@@ -128,6 +135,12 @@ function RegionName({ name }: { name: string }) {
     }
     if (lower.startsWith(`${designator} `)) {
       stem = base.slice(designator.length + 1);
+      matched = designator;
+      break;
+    }
+    // Hyphenated romanizations (e.g. Kyoto-fu); space forms take precedence.
+    if (lower.endsWith(`-${designator}`)) {
+      stem = base.slice(0, -designator.length - 1);
       matched = designator;
       break;
     }
@@ -147,6 +160,7 @@ function RegionName({ name }: { name: string }) {
 // Uniform detail card; NULL fields hide their row (see CONTEXT.md).
 export function GroupDetailCard({ group }: { group: EthnicGroup }) {
   const languages = asStrings(group.languages);
+  const subgroups = asStrings(group.subgroups);
   const countries = asStrings(group.countries);
   const regions = asPoints(group.regions);
   const cities = asPoints(group.cities);
@@ -170,23 +184,24 @@ export function GroupDetailCard({ group }: { group: EthnicGroup }) {
               label="Languages"
               hint="Spoken language(s); entries with a Glottolog page link out."
             >
-              {languages.map((l, i) => (
-                <span key={l}>
-                  {i > 0 && ", "}
-                  {glottologUrls?.[l] ? (
-                    <a
-                      href={glottologUrls[l]}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="underline decoration-foreground/30 underline-offset-2 hover:decoration-foreground"
-                    >
-                      {l}
-                    </a>
-                  ) : (
-                    l
-                  )}
-                </span>
-              ))}
+              <ul className="flex flex-col gap-1">
+                {languages.map((l) => (
+                  <li key={l}>
+                    {glottologUrls?.[l] ? (
+                      <a
+                        href={glottologUrls[l]}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="underline decoration-foreground/30 underline-offset-2 hover:decoration-foreground"
+                      >
+                        {l}
+                      </a>
+                    ) : (
+                      l
+                    )}
+                  </li>
+                ))}
+              </ul>
             </Row>
           )}
           {group.language_family && (
@@ -196,6 +211,18 @@ export function GroupDetailCard({ group }: { group: EthnicGroup }) {
             >
               {group.language_family}{" "}
               {group.language_subfamily && `> ${group.language_subfamily}`}
+            </Row>
+          )}
+          {subgroups.length > 0 && (
+            <Row
+              label="Subgroups"
+              hint="Named subdivisions of the group; searchable."
+            >
+              <ul className="flex flex-col gap-1">
+                {subgroups.map((s) => (
+                  <li key={s}>{s}</li>
+                ))}
+              </ul>
             </Row>
           )}
           <Row label="Countries" hint="Homeland only — diaspora excluded.">
