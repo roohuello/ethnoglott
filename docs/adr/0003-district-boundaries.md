@@ -20,7 +20,7 @@ columns, seed-time discipline, no FKs.
 
 ## Rationale
 - Read-only reference at sample scale; in-memory filtering needs no joins.
-- Seed-time fetch + simplify (cap ~100KB) keeps renders fast and the app
+- Seed-time fetch + simplify (cap ~250KB/file, smallest tolerance ≥0.0001° that fits) keeps renders fast and the app
   fully offline-capable — no runtime geo dependency to fail.
 - One marker per entry + fit-all framing matches the map's job: showing
   where the group lives.
