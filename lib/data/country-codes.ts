@@ -4,6 +4,7 @@ import type Flag from "react-flagpack";
 type CountryIsoCode = ComponentProps<typeof Flag>["code"];
 
 const COUNTRY_CODES: Record<string, CountryIsoCode> = {
+  "American Samoa": "AS",
   Austria: "AT",
   Belgium: "BE",
   Bulgaria: "BG",

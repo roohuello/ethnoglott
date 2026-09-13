@@ -83,6 +83,7 @@ function RegionName({ name }: { name: string }) {
     "audany",
     "oblysy",
     "oblast",
+    "territory",
     "hromada",
     "obshtina",
     "município",
