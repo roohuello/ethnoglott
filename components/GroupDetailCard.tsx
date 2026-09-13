@@ -91,6 +91,7 @@ function RegionName({ name }: { name: string }) {
     "comene",
     "občina",
     "comune",
+    "provìntzia",
     "county",
     "distrito",
     "dependency",
