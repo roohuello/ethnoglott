@@ -223,7 +223,7 @@ export function GroupDetailCard({ group }: { group: EthnicGroup }) {
               label="Language Family"
               hint="One filter key for the primary language."
             >
-              <ul className="list-disc space-y-1 pl-5">
+              <ul className="flex flex-col gap-1">
                 <li>
                   {group.language_family}
                   {group.language_subfamily && (
