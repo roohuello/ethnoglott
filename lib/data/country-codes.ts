@@ -41,6 +41,7 @@ const COUNTRY_CODES: Record<string, CountryIsoCode> = {
   Somalia: "SO",
   "South Africa": "ZA",
   Spain: "ES",
+  Samoa: "WS",
   Sudan: "SD",
   Sweden: "SE",
   Taiwan: "TW",
