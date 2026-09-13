@@ -223,8 +223,16 @@ export function GroupDetailCard({ group }: { group: EthnicGroup }) {
               label="Language Family"
               hint="One filter key for the primary language."
             >
-              {group.language_family}{" "}
-              {group.language_subfamily && `> ${group.language_subfamily}`}
+              <ul className="flex flex-col gap-1">
+                <li>
+                  {group.language_family}
+                  {group.language_subfamily && (
+                    <ul className="flex flex-col gap-1 pl-4">
+                      <li>{group.language_subfamily}</li>
+                    </ul>
+                  )}
+                </li>
+              </ul>
             </Row>
           )}
           {subgroups.length > 0 && (
@@ -287,7 +295,11 @@ export function GroupDetailCard({ group }: { group: EthnicGroup }) {
               label="Cities"
               hint="Major towns as dots, distinct from region pins."
             >
-              {cities.map((c) => c.name).join(", ")}
+              <ul className="flex flex-col gap-1">
+                {cities.map((c) => (
+                  <li key={c.name}>{c.name}</li>
+                ))}
+              </ul>
             </Row>
           )}
         </dl>
