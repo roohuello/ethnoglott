@@ -27,6 +27,7 @@ const COUNTRY_CODES: Record<string, CountryIsoCode> = {
   "New Zealand": "NZ",
   Norway: "NO",
   Pakistan: "PK",
+  Poland: "PL",
   Portugal: "PT",
   Romania: "RO",
   Russia: "RU",
