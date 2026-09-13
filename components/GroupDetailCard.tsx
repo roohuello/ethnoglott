@@ -93,6 +93,7 @@ function RegionName({ name }: { name: string }) {
     "powiat",
     "munitsipaliteti",
     "municipio",
+    "kawman",
     "județul",
     "district",
     "ضلع",
