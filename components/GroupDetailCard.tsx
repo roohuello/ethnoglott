@@ -89,6 +89,7 @@ function RegionName({ name }: { name: string }) {
     "comune",
     "county",
     "distrito",
+    "dependency",
     "județul",
     "district",
     "ضلع",
