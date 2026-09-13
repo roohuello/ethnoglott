@@ -92,6 +92,7 @@ function RegionName({ name }: { name: string }) {
     "dependency",
     "powiat",
     "munitsipaliteti",
+    "municipio",
     "județul",
     "district",
     "ضلع",
