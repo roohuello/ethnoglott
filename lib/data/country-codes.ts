@@ -26,7 +26,6 @@ const COUNTRY_CODES: Record<string, CountryIsoCode> = {
   Maldives: "MV",
   Mauritius: "MU",
   Mongolia: "MN",
-  Nicaragua: "NI",
   "New Zealand": "NZ",
   Norway: "NO",
   Pakistan: "PK",
