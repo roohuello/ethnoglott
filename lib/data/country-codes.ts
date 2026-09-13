@@ -17,6 +17,7 @@ const COUNTRY_CODES: Record<string, CountryIsoCode> = {
   France: "FR",
   Georgia: "GE",
   Greenland: "GL",
+  Guam: "GU",
   Hungary: "HU",
   Honduras: "HN",
   India: "IN",
