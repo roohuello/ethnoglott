@@ -88,6 +88,7 @@ function RegionName({ name }: { name: string }) {
     "občina",
     "comune",
     "county",
+    "distrito",
     "județul",
     "district",
     "ضلع",
@@ -110,6 +111,7 @@ function RegionName({ name }: { name: string }) {
     "járás",
     "kommune",
     "kommun",
+    "kabupaten",
     "phường",
     "tỉnh",
     "nahiyisi",
@@ -119,6 +121,8 @@ function RegionName({ name }: { name: string }) {
     "zila",
     "fu",
     "região",
+    "rohe",
+    "rdzong",
     "region",
   ];
   const aliasMatch = name.match(/^(.*?)\s+(\([^()]*\))$/);
