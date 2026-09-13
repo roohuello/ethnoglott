@@ -13,6 +13,7 @@ const COUNTRY_CODES: Record<string, CountryIsoCode> = {
   Estonia: "EE",
   Eswatini: "SZ",
   Ethiopia: "ET",
+  Fiji: "FJ",
   France: "FR",
   Greenland: "GL",
   Hungary: "HU",
