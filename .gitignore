@@ -46,3 +46,6 @@ next-env.d.ts
 
 # codegraph local index
 .codegraph/
+
+# local admin-level source data
+/countries-admin1.csv
