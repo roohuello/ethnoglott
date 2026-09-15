@@ -66,3 +66,5 @@ No builds unless asked. Retry flaky edge once.
 Commit + push after every successful round (`feat:` style).
 Stage intended files only (never secrets); inspect
 `status`/`diff`/`log` first. Leave foreign diffs uncommitted.
+Then delete the drawn row from `countries-admin1.csv` by
+full 5-field match (first occurrence only); void draws stay.
