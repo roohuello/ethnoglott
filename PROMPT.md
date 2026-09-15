@@ -68,3 +68,5 @@ Stage intended files only (never secrets); inspect
 `status`/`diff`/`log` first. Leave foreign diffs uncommitted.
 Then delete the drawn row from `countries-admin1.csv` by
 full 5-field match (first occurrence only); void draws stay.
+Parent-purge: when a parent division's boundary enters the DB,
+delete all its subdivision rows (voids the subsumed draws).
