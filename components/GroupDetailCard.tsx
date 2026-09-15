@@ -129,6 +129,8 @@ function RegionName({ name }: { name: string }) {
     "maakunta",
     "gemeente",
     "rayon",
+    "mukh",
+    "landkreis",
     "reġjun",
     "grad",
     "kabupaten",
