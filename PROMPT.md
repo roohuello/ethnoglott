@@ -32,8 +32,8 @@ inference ≠ proof. Note minorities; abort if contradicted.
   New admin term → add lowercase pill to `GroupDetailCard`.
 - ISO countries; continent follows same-country precedent.
   Extend `country-codes.ts` only if missing.
-- `languages[]` ↔ `glottolog_urls` 1:1, every URL HTTP-200
-  (ids retire: bela1252, ava1243–45). Family/subfamily ←
+- `languages[]` ↔ `glottolog_urls` OBJECT keyed by language
+  name (every URL HTTP-200; ids retire: bela1252, ava1243–45). Family/subfamily ←
   Glottolog tree path.
 
 ## GeoJSON

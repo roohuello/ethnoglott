@@ -131,6 +131,7 @@ function RegionName({ name }: { name: string }) {
     "rayon",
     "mukh",
     "landkreis",
+    "landgraes",
     "reġjun",
     "grad",
     "kabupaten",
