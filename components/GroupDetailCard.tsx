@@ -125,6 +125,7 @@ function RegionName({ name }: { name: string }) {
     "járás",
     "kommune",
     "kommun",
+    "län",
     "kunta",
     "maakunta",
     "gemeente",
