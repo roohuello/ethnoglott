@@ -31,6 +31,7 @@ const COUNTRY_CODES: Record<string, CountryIsoCode> = {
   Japan: "JP",
   Kazakhstan: "KZ",
   Kiribati: "KI",
+  Latvia: "LV",
   Maldives: "MV",
   Malta: "MT",
   Mauritius: "MU",

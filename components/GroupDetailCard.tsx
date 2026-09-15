@@ -133,6 +133,7 @@ function RegionName({ name }: { name: string }) {
     "landkreis",
     "landgraes",
     "oblast",
+    "novads",
     "reġjun",
     "grad",
     "kabupaten",
